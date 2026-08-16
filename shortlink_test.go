@@ -64,7 +64,10 @@ func TestShortenBadURL(t *testing.T) {
 	ts := httptest.NewServer(mux)
 	defer ts.Close()
 
-	resp, _ := http.Post(ts.URL+"/api/shorten", "application/json", strings.NewReader(`{"url":"ftp://x"}`))
+	resp, err := http.Post(ts.URL+"/api/shorten", "application/json", strings.NewReader(`{"url":"ftp://x"}`))
+	if err != nil {
+		t.Fatalf("缩短请求失败: %v", err)
+	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusBadRequest {
 		t.Fatalf("非法 url 应 400, 得到 %d", resp.StatusCode)
